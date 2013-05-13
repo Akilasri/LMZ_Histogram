@@ -92,7 +92,7 @@ var highlightStyle = new OpenLayers.Style({
   					value = -9999;
   					}
   				//console.log(name+" "+value);
-  				if (min>value) { min = value };
+  				if (min>value & value!=-9999) { min = (Math.round(value)*100/100)};
   				if (max<value) { max = value };
   				histogramData.push(	[
   									name,
@@ -112,7 +112,7 @@ var highlightStyle = new OpenLayers.Style({
   		histogramChart.store.loadData(histogramData);
   		histogramChart.store.sort('value','ASC');
   		histogramChart.axes.items[0].maximum = max;
-  		
+  		histogramChart.axes.items[0].minimum = min;
   		
   		histogramChart.redraw();
   					
@@ -331,15 +331,15 @@ var highlightStyle = new OpenLayers.Style({
   				values.push(index);
   			
   			}
+        var wide = Math.floor(histogramChart.axes.items[0].width);
   			classBreakSlider.destroy();
   			classBreakSlider = Ext.create('Ext.slider.Multi', {
   				id: 'classBreakSlider',
-  				width: 300,
-  				style: {
-  					'margin-right': 5,
-  					'position': 'relative',
-  					'right': 5
-  					},
+  				width: (wide)-20,
+  				values: values,
+					style : {
+						'margin-left': 400-wide
+						},
   				values: values,
   				increment: 5,
   				minValue: 1,
