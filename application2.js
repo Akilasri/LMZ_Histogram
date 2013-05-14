@@ -275,11 +275,14 @@ Ext.application({
         toolbarItems.push(Ext.create('Ext.button.Button', action));
         toolbarItems.push("-");
 
-  	// Define the legendButton with handler
+  	// Define the HistogramButton with handler
   	
   	legendButton = Ext.create('Ext.button.Button', {
-  		text: 'Style Legend',
-  		handler: onLegendStyle
+  		text: '',
+  		handler: onLegendStyle,
+        iconCls : 'histo',
+        tooltip : 'Histogram',
+        scale :'medium'
   		});
   	toolbarItems.push(legendButton);
   	
