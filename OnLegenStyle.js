@@ -383,6 +383,7 @@ var highlightStyle = new OpenLayers.Style({
   // StylePanel
   stylePanel = Ext.create("Ext.panel.Panel", {
   	id: 'stylePanel',
+  	title : 'Chart Options',
   	width: 	450,
   	height: 600,
   	layout: 'vbox',
@@ -424,7 +425,7 @@ function onLegendStyle(btn, evt) {
   // Brings up a configuration - window to style the legend of a vector layer
   if (!legendStyleWindow) {
   	legendStyleWindow = Ext.create('Ext.window.Window', {
-  		title: 'Legend Styler',
+  		title: 'Histogram',
   		height: 460,
   		width: 410,
   		closeAction: 'hide',
