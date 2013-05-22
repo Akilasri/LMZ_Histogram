@@ -370,23 +370,105 @@ Ext.application({
   // define the vectorLegend and legend Panel as parts of the menuPanel
 
 
-  	vectorLegend = Ext.create('GeoExt.container.VectorLegend', {
+//VECTOR LEGEND
+    	vectorLegend = Ext.create('GeoExt.container.VectorLegend', {
             untitledPrefix: 'keine Daten',
             legendTitle: 'Kein Thema',   
             layer: staaten,
-  		clickableTitle: true,
-  		listeners: {
-  				'ruleclick': function(comp, rule, evt) {
-  					console.log(rule);
-  				}
-  		
-  		}
+			clickableTitle: true,
+			listeners: {
+					'ruleclick': function(comp, rule, evt) {
+						console.log(rule);
+						var labeltext1=rule.name.split("-")[0];
+						var labeltext2=rule.name.split("-")[1];
+						var ruleaddPanel=Ext.create('Ext.panel.Panel', {
+						width : 100, 
+						height : 70,
+						layout: {
+							type: 'vbox',
+							align: 'center'
+						},
+						renderTo: document.body,
+						items :[
+							{xtype: 'text',
+							 text : labeltext1 ,
+							 flex: 2					
+							},
+							{flex: 2,
+							xtype: 'textfield',
+							 value : labeltext2 ,
+							 enableKeyEvents: true,
+							 //vtype: 'alphanum',
+							 validateonchange: true,
+							 //vtext: 'Only pass alphanumeric values !',
+							 validator: function(value) {
+								
+								if (value>5) {
+									return "Invalid input!";
+								}
+								else return true;
+							 
+							 },
+							 listeners: {
+								'keypress': function ( myfield, e, eOpts ) {
+									
+									if (e.getKey() == e.ENTER) {
+										console.log("Ready changed value");
+										var rulenum = staaten.styleMap.styles.default.rules.length-1;
+										for (i = 0; i< rulenum-1; i++) {
+										if(staaten.styleMap.styles.default.rules[i].name == rule.name) 
+											{
+											// Validate the input value against the next class-break
+											var value = parseFloat(myfield.getValue());
+											
+											if (value > ranges[i+1]) {
+												value = ranges[i+1];
+												myfield.setValue(ranges[i+1]);
+											}
+											if (value < ranges[i-1]) {
+												value = ranges[i-1];
+												myfield.setValue(ranges[i-1]);
+											}
+											// Create a copy of the ranges array
+											var newRanges = ranges;
+											newRanges[i]=parseFloat(myfield.getValue());
+											applyThematicStyle(newRanges); 
+											}
+										}
+											
+									}
+								
+								}
+							 }
+													
+							}
+							]
+							
+						});
+						var dumbWindow = Ext.create("Ext.window.Window",{
+							width: 120,
+							height: 100,
+							renderTo: Ext.getBody(),
+							items: [ruleaddPanel]					
+						
+						}).show();
+					},
+					'symbolclick': function(comp, rule,evt){
+						console.log(rule);
+					},
+					//'ruleselected': function(comp, rule,evt){
+					//	'rule.enableDD':true; 
+					//},
+					'rulemoved': function(comp, rule, evt) {
+						console.log(rule);
+					}
+					
+			
+			}
             
         });
-  	
-  	
-  	
-  	
+		
+		
   	        // LegendPanel
         var legendPanel = Ext.create('Ext.Panel', {
             title: "Legende",
