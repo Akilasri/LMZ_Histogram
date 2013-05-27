@@ -371,7 +371,7 @@ Ext.application({
 
 
 //VECTOR LEGEND
-    	vectorLegend = Ext.create('GeoExt.container.VectorLegend', {
+		vectorLegend = Ext.create('GeoExt.container.VectorLegend', {
             untitledPrefix: 'keine Daten',
             legendTitle: 'Kein Thema',   
             layer: staaten,
@@ -403,7 +403,11 @@ Ext.application({
 							 //vtext: 'Only pass alphanumeric values !',
 							 validator: function(value) {
 								
-								if (value>5) {
+								if (isNaN(value)){
+								//if (value>5) {
+									//value=rule.name.split("-")[1];
+									//console.log(value); 
+									//return false;
 									return "Invalid input!";
 								}
 								else return true;
@@ -420,7 +424,10 @@ Ext.application({
 											{
 											// Validate the input value against the next class-break
 											var value = parseFloat(myfield.getValue());
-											
+											if (isNaN(value)){
+												value=rule.name.split("-")[1];
+												myfield.setValue(ranges[i]);
+											}
 											if (value > ranges[i+1]) {
 												value = ranges[i+1];
 												myfield.setValue(ranges[i+1]);
@@ -467,6 +474,9 @@ Ext.application({
 			}
             
         });
+		
+		
+		
 		
 		
   	        // LegendPanel
