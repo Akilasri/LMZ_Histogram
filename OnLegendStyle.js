@@ -313,7 +313,28 @@ function updateHistogram() {
             }
         });
   	
-  	
+  	//LogCheckBox to choose whether the graph should be shown logarithmically
+  	var logCheckBox = Ext.create('Ext.form.field.Checkbox', {
+			width: 50,
+			//editable: false,
+			boxLabel: 'Log',
+			checked: false,
+			listeners: {
+				change: function() {
+					if (this.checked==true){
+						console.log ('Checked!');
+						updateHistogram();
+						//setSliderBreaks();
+					}
+					else{
+						console.log ('Unchecked!');
+						updateHistogram();
+						//setSliderBreaks();
+					}
+				}
+			}
+			//renderTo: Ext.getBody()
+		});
 
   	
   	// MultiSlider 
