@@ -76,51 +76,68 @@ var highlightStyle = new OpenLayers.Style({
   			}]
   });
 
-  function updateHistogram() {
-  	// Update Histogram 
-  		console.log("Update Histogram");
-  		var histogramData = new Array();
-  		var min = 0;
-  		var max = 0;
-  		for (i = 0; i < staaten.features.length; i++) {
-  			
-  			var name = staaten.features[i].data['SOVEREIGNT'];
-  			if ( Object.keys(staaten.features[i].data).length > 1) {
-  				var value = parseFloat(staaten.features[i].data[indComboBox.value][yearComboBox.value]);
-  				// Check for missing Data
-  				if (!value) {
-  					value = -9999;
-  					}
-  				//console.log(name+" "+value);
-  				if (min>value & value!=-9999) { min = (Math.round(value)*100/100)};
-  				if (max<value) { max = value };
-  				histogramData.push(	[
-  									name,
-  									value
-  									]);
-  				}
-  			else {
-  				histogramData.push(	[
-  									staaten.features[i].data['SOVEREIGNT'],
-  									-9999
-  									]);
-  				}
-  			}
-  		
-  		
-  		// Update chart
-  		histogramChart.store.loadData(histogramData);
-  		histogramChart.store.sort('value','ASC');
-  		histogramChart.axes.items[0].maximum = max;
-      histogramChart.axes.items[0].minimum = min;
-  		
-  		
-  		histogramChart.redraw();
-  					
-  
-  
-  }
-  
+  	function updateHistogram() {
+		// Update Histogram 
+		console.log("Update Histogram");
+		var histogramData = new Array();
+		var min = 0;
+		var max = 0;
+		for (i = 0; i < staaten.features.length; i++) {
+			var name = staaten.features[i].data['SOVEREIGNT'];				
+			if ( Object.keys(staaten.features[i].data).length > 1) {
+				var value = parseFloat(staaten.features[i].data[indComboBox.value][yearComboBox.value]);
+				// Check for missing Data
+				if (!value) {
+					value = -9999;
+				}
+				console.log(name+" "+value);
+				if (logCheckBox.checked==true){
+					if (value > 0) {value=(Math.log(value))};
+					if (value != -9999 & value < 0) {value=-(Math.log(Math.abs(value)))};
+					if (min > value & value != -9999) {min = Math.round(value)*100/100};
+					if (max < value) {max = (Math.round(value)*100/100)};
+					//for (var i=0; histogramChart.axes.items[0].chart.axes.items[0].labels.length; i++){((histogramChart.axes.items[0].chart.axes.items[0].labels[i])^10);}	
+					histogramData.push([
+							name,
+							value
+							]);
+				}
+				else{
+					if (min>value & value!=-9999) {min = Math.round(value)*100/100};
+					if (max<value) {max = (Math.round(value)*100/100)};
+					histogramData.push([
+							name,
+							value
+							]);
+				}
+			}
+			else {
+				histogramData.push(	[
+							staaten.features[i].data['SOVEREIGNT'],
+							-9999
+							]);
+			
+			}
+		}
+		// Update chart
+		histogramChart.store.loadData(histogramData);
+		histogramChart.store.sort('value','ASC');
+		if (logCheckBox.checked==true){
+			histogramChart.axes.items[0].maximum = max;
+			histogramChart.axes.items[0].minimum = min;
+		}
+		else {
+			histogramChart.axes.items[0].maximum = max;
+			histogramChart.axes.items[0].minimum = min;
+		}
+		histogramChart.redraw();
+	}
+
+	// Create task for delayed execution of histogram update
+	histogramTask = new Ext.util.DelayedTask(function(){
+			updateHistogram();
+	});
+	
   // Create task for delayed execution of histogram update
   histogramTask = new Ext.util.DelayedTask(function(){
   		updateHistogram();
