@@ -386,7 +386,7 @@ Ext.application({
 						height : 70,
 						layout: {
 							type: 'vbox',
-							align: 'center'
+							align: 'left'
 						},
 						renderTo: document.body,
 						items :[
@@ -429,12 +429,12 @@ Ext.application({
 												myfield.setValue(ranges[i]);
 											}
 											if (value > ranges[i+1]) {
-												value = ranges[i+1];
-												myfield.setValue(ranges[i+1]);
+												value = ranges[i];
+												myfield.setValue(ranges[i]);
 											}
 											if (value < ranges[i-1]) {
-												value = ranges[i-1];
-												myfield.setValue(ranges[i-1]);
+												value = ranges[i];
+												myfield.setValue(ranges[i]);
 											}
 											// Create a copy of the ranges array
 											var newRanges = ranges;
