@@ -428,11 +428,11 @@ Ext.application({
 												value=rule.name.split("-")[1];
 												myfield.setValue(ranges[i]);
 											}
-											if (value > ranges[i+1]) {
+											if (value >= Math.floor(ranges[i+1]*100)/100) {
 												value = ranges[i];
 												myfield.setValue(ranges[i]);
 											}
-											if (value < ranges[i-1]) {
+											if (value <= Math.floor(ranges[i-1]*100)/100) {
 												value = ranges[i];
 												myfield.setValue(ranges[i]);
 											}
