@@ -15,7 +15,8 @@ var highlightStyle = new OpenLayers.Style({
   	extend: 'Ext.data.Model',
   	fields: [
          {name: 'state', type: 'string'},
-         {name: 'value',  type: 'float', defaultValue: -9999}
+         {name: 'value',  type: 'float', defaultValue: -9999},
+	 {name: 'val2', type: 'float', defaultValue: -9999}
      ]
   });
 
@@ -31,7 +32,7 @@ var highlightStyle = new OpenLayers.Style({
   		width: 400,
   		height: 200,
   		store: histogramStore,
-  		theme: 'Blue',
+  		theme: 'Category1',
   		axes: [
   			{
   			title: 'Value',
@@ -72,7 +73,24 @@ var highlightStyle = new OpenLayers.Style({
   				'itemclick': function(item) {
   					console.log(item);
   				}
-  			}
+  			},
+  			{
+			type : 'scatter',
+			axis :'left',
+			xField: 'state',
+			yField : 'val2',
+			markerConfig: {
+	                    type: 'circle',
+	                    size: 5
+	                },
+			tips: {
+					trackMouse: true,
+				   width: 120,
+				   height: 40,
+				   renderer: function(storeItem, item) {
+				   this.setTitle(storeItem.get('state') + ':<br/>' + storeItem.get('val2') );
+					}
+				}
   			}]
   });
 
@@ -82,10 +100,18 @@ function updateHistogram() {
 		var histogramData = new Array();
 		var min = 0;
 		var max = 0;
+		var val2;
 		for (i = 0; i < staaten.features.length; i++) {
 			var name = staaten.features[i].data['SOVEREIGNT'];				
 			if ( Object.keys(staaten.features[i].data).length > 1) {
 				var value = parseFloat(staaten.features[i].data[indComboBox.value][yearComboBox.value]);
+				
+				// values to highlight class intervals
+				if (histogramChart.store.data.length !=0){
+					val2 = histogramChart.store.getAt(i).data.val2;
+				}else {
+					val2 = -9999;}
+					
 				// Check for missing Data
 				if (!value) {
 					value = -9999;
@@ -107,13 +133,15 @@ function updateHistogram() {
 					if (max<value) {max = (Math.round(value)*100/100)};
 					histogramData.push([
 							name,
-							value
+							value,
+							val2
 							]);
 				}
 			}
 			else {
 				histogramData.push(	[
 							staaten.features[i].data['SOVEREIGNT'],
+							-9999,
 							-9999
 							]);
 			
@@ -123,7 +151,7 @@ function updateHistogram() {
   		histogramChart.store.loadData(histogramData);
   		histogramChart.store.sort('value','ASC');
   		histogramChart.axes.items[0].maximum = max;
-      histogramChart.axes.items[0].minimum = min;
+      		histogramChart.axes.items[0].minimum = min;
   		
   		
   		histogramChart.redraw();
@@ -394,7 +422,7 @@ function updateHistogram() {
   						for (i=0;i<sliderRanges.length;i++) {
   							
   							newRanges.push(histogramChart.store.getAt(sliderRanges[i]).data.value);
-  							 
+  							histogramChart.store.getAt(sliderRanges[i]).set('val2',histogramChart.store.getAt(sliderRanges[i]).data.value); 
   						}
   						// push last Value
   						newRanges.push(histogramChart.store.getAt(histogramChart.store.data.length-1).data.value);
@@ -404,7 +432,7 @@ function updateHistogram() {
   					
   				},
   				tipText: function(thumb){
-  								console.log(histogramChart.store.getAt(thumb.value).data.value);
+  								//console.log(histogramChart.store.getAt(thumb.value).data.value);
   								return histogramChart.store.getAt(thumb.value).data.value;
   								}
   			});
@@ -459,7 +487,7 @@ function onLegendStyle(btn, evt) {
   if (!legendStyleWindow) {
   	legendStyleWindow = Ext.create('Ext.window.Window', {
   		title: 'Histogram',
-  		height: 460,
+  		height: 560,
   		width: 410,
   		closeAction: 'hide',
   		layout: 'fit',
