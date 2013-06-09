@@ -475,6 +475,7 @@ function updateHistogram() {
   			text: 'Color set'
   		},
   		farbComboBox,
+  		logCheckBox,
   		histogramChart
   		
   	]
