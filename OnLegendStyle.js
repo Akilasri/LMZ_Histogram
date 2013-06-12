@@ -72,7 +72,7 @@ var highlightStyle = new OpenLayers.Style({
   				'itemclick': function(item) {
   					console.log(item);
   				}
-  			},
+  			}},
   			{
 			type : 'scatter',
 			axis :'left',
