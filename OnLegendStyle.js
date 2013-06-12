@@ -449,6 +449,7 @@ function updateHistogram() {
   						}
   						// push last Value
   						newRanges.push(histogramChart.store.getAt(histogramChart.store.data.length-1).data.value);
+  						updateHistogram();
   						applyThematicStyle(newRanges);
   						return true;
   					}
