@@ -15,8 +15,7 @@ var highlightStyle = new OpenLayers.Style({
   	extend: 'Ext.data.Model',
   	fields: [
          {name: 'state', type: 'string'},
-         {name: 'value',  type: 'float', defaultValue: -9999},
-	 {name: 'val2', type: 'float', defaultValue: -9999}
+         {name: 'value',  type: 'float', defaultValue: -9999}
      ]
   });
 
@@ -78,19 +77,32 @@ var highlightStyle = new OpenLayers.Style({
 			type : 'scatter',
 			axis :'left',
 			xField: 'state',
-			yField : 'val2',
+			yField : 'value',
 			markerConfig: {
 	                    type: 'circle',
 	                    size: 5
 	                },
 			tips: {
-					trackMouse: true,
+				   trackMouse: true,
 				   width: 120,
 				   height: 40,
 				   renderer: function(storeItem, item) {
-				   this.setTitle(storeItem.get('state') + ':<br/>' + storeItem.get('val2') );
+				   this.setTitle(storeItem.get('state') + ':<br/>' + storeItem.get('value') );
+					}
+				},
+			renderer : function (sprite, record, attributes, index, store){
+				for (i=1; i< ranges.length; i++){
+					
+					if (record.data.value != ranges[i]){
+					sprite.setAttributes({opacity:0}, true);
+					}
+					else {
+					sprite.setAttributes({fill:'#ff0000', opacity: 1}, true);
+					break;
 					}
 				}
+				return attributes;
+			    }
   			}]
   });
 
@@ -100,18 +112,13 @@ function updateHistogram() {
 		var histogramData = new Array();
 		var min = 0;
 		var max = 0;
-		var val2;
+		
 		for (i = 0; i < staaten.features.length; i++) {
 			var name = staaten.features[i].data['SOVEREIGNT'];				
 			if ( Object.keys(staaten.features[i].data).length > 1) {
 				var value = parseFloat(staaten.features[i].data[indComboBox.value][yearComboBox.value]);
 				
-				// values to highlight class intervals
-				if (histogramChart.store.data.length !=0){
-					val2 = histogramChart.store.getAt(i).data.val2;
-				}else {
-					val2 = -9999;}
-					
+								
 				// Check for missing Data
 				if (!value) {
 					value = -9999;
@@ -133,15 +140,13 @@ function updateHistogram() {
 					if (max<value) {max = (Math.round(value)*100/100)};
 					histogramData.push([
 							name,
-							value,
-							val2
+							value
 							]);
 				}
 			}
 			else {
 				histogramData.push(	[
 							staaten.features[i].data['SOVEREIGNT'],
-							-9999,
 							-9999
 							]);
 			
@@ -364,10 +369,28 @@ function updateHistogram() {
 			//renderTo: Ext.getBody()
 		});
 
+  	//Save_Button
+   	var savebutton = Ext.create('Ext.Button', {
+  			 text: 'Profil speichern',
+    			 renderTo: Ext.getBody(),
+    			 handler: function() {
+        			alert('Speichert noch nicht!');
+				console.log ('stylePanel');
+			}
+		});
+
+	//Load_Button
+  	 var loadbutton = Ext.create('Ext.Button', {
+   				text: 'Profil laden',
+    				renderTo: Ext.getBody(),
+   				handler: function() {
+        			alert('Lädt noch nicht!');
+				}
+			});
   	
   	// MultiSlider 
   	
-  				
+  		
   	classBreakSlider = Ext.create('Ext.slider.Multi', {
   		id: 'classBreakSlider',
   		width: 320,
@@ -422,7 +445,7 @@ function updateHistogram() {
   						for (i=0;i<sliderRanges.length;i++) {
   							
   							newRanges.push(histogramChart.store.getAt(sliderRanges[i]).data.value);
-  							histogramChart.store.getAt(sliderRanges[i]).set('val2',histogramChart.store.getAt(sliderRanges[i]).data.value); 
+  							
   						}
   						// push last Value
   						newRanges.push(histogramChart.store.getAt(histogramChart.store.data.length-1).data.value);
@@ -432,9 +455,9 @@ function updateHistogram() {
   					
   				},
   				tipText: function(thumb){
-  								//console.log(histogramChart.store.getAt(thumb.value).data.value);
-  								return histogramChart.store.getAt(thumb.value).data.value;
-  								}
+  					//console.log(histogramChart.store.getAt(thumb.value).data.value);
+  					return histogramChart.store.getAt(thumb.value).data.value;
+  					}
   			});
   		stylePanel.add(classBreakSlider);
   	}
@@ -444,7 +467,7 @@ function updateHistogram() {
   // StylePanel
   stylePanel = Ext.create("Ext.panel.Panel", {
   	id: 'stylePanel',
-  	title :'Chart Options',
+  	title :'Tabellen Einstellungen',
   	width: 	450,
   	height: 600,
   	layout: 'vbox',
@@ -452,31 +475,33 @@ function updateHistogram() {
   	items: [
   		{
   			xtype: 'label',
-  			text: 'Indicator'
+  			text: 'Indikator'
   		},
   		indComboBox,
   		{
   			xtype: 'label',
-  			text: 'Year'
+  			text: 'Jahr'
   		},
   		yearComboBox,
   		{
   			xtype: 'label',
-  			text: 'Classification method'
+  			text: 'Klassifizierungsmethode'
   		},
   		clTypeComboBox,
   		{
   			xtype: 'label',
-  			text: 'Number of classes'
+  			text: 'Anzahl der Klassen'
   		},
   		clComboBox,
   		{
   			xtype: 'label',
-  			text: 'Color set'
+  			text: 'Farbe'
   		},
   		farbComboBox,
   		logCheckBox,
-  		histogramChart
+  		histogramChart,
+  		savebutton,
+   		loadbutton
   		
   	]
     
