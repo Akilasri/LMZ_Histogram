@@ -45,8 +45,11 @@ var highlightStyle = new OpenLayers.Style({
   			type: 'Category',
   			label: {
   				renderer: function(v){
-  					return '';
-  				}
+				if (logCheckBox.checked==true){return '10^'+(Math.round(v*100)/100);
+				}
+				else {return Math.round(v*100)/100;}
+				}
+			}
   			},
   			position: 'bottom',
   			fields: ['state']
@@ -125,8 +128,8 @@ function updateHistogram() {
 				}
 				console.log(name+" "+value);
 				if (logCheckBox.checked==true){
-					if (value > 0) {value=(Math.log(value))};
-					if (value != -9999 & value < 0) {value=-(Math.log(Math.abs(value)))};
+					if (value > 0) {value=(Math.log(value)Math.LN10)};
+					if (value != -9999 & value < 0) {value=-(Math.log(Math.abs(value)))/Math.LN10};
 					if (min > value & value != -9999) {min = Math.round(value)*100/100};
 					if (max < value) {max = (Math.round(value)*100/100)};
 					histogramData.push([
@@ -158,7 +161,7 @@ function updateHistogram() {
   		histogramChart.axes.items[0].maximum = max;
       		histogramChart.axes.items[0].minimum = min;
   		
-  		
+  		setSliderBreaks();
   		histogramChart.redraw();
   					
   
@@ -240,9 +243,10 @@ function updateHistogram() {
                         }
                     }
                     reloadGapminderLayer("Staaten thematisch", keystring);
-  				staaten.removeAllFeatures();
-  				
-  				
+  		    staaten.removeAllFeatures();
+  		    applyThematicStyle();
+		    updateHistogram();
+		    setSliderBreaks();
                 }
             }
         });
@@ -272,9 +276,9 @@ function updateHistogram() {
             triggerAction: 'all',
             listeners: {
                 select: function() {
-                    applyThematicStyle();
-  				updateHistogram();
-  				setSliderBreaks();
+                	applyThematicStyle();
+  			updateHistogram();
+  			setSliderBreaks();
                 }
             }
         });
@@ -302,9 +306,9 @@ function updateHistogram() {
             triggerAction: 'all',
             listeners: {
                 select: function() {
-                    applyThematicStyle();
-  				setSliderBreaks();
-  				}
+                	applyThematicStyle();
+  			setSliderBreaks();
+                }
             }
         });
 
@@ -321,9 +325,8 @@ function updateHistogram() {
             triggerAction: 'all',
             listeners: {
                 select: function() {
-                    applyThematicStyle();
-  				setSliderBreaks();
-  				
+                	applyThematicStyle();
+  			setSliderBreaks();	
                 }
             }
         });
@@ -348,26 +351,17 @@ function updateHistogram() {
   	
   	//LogCheckBox to choose whether the graph should be shown logarithmically
   	var logCheckBox = Ext.create('Ext.form.field.Checkbox', {
-			width: 50,
-			//editable: false,
-			boxLabel: 'Log',
-			checked: false,
-			listeners: {
-				change: function() {
-					if (this.checked==true){
-						console.log ('Checked!');
-						updateHistogram();
-						//setSliderBreaks();
-					}
-					else{
-						console.log ('Unchecked!');
-						updateHistogram();
-						//setSliderBreaks();
-					}
-				}
+		boxLabel: 'Log',
+		width: 50,
+		checked: false,
+		listeners: {
+			change: function() {
+				applyThematicStyle();
+				updateHistogram();
+				setSliderBreaks();
 			}
-			//renderTo: Ext.getBody()
-		});
+		}
+	});
 
   	//Save_Button
    	var savebutton = Ext.create('Ext.Button', {
@@ -410,11 +404,18 @@ function updateHistogram() {
 
   	function setSliderBreaks() {
   			var values = [];
-  			for (i=1;i<ranges.length-1;i++) {
-  				var index = histogramChart.store.findBy(function(record, id) {if (record.data.value < ranges[i]) return false; else return true;});
-  				values.push(index);
-  			
-  			}
+  			if (logCheckBox.checked==true){
+				for (i=1;i<ranges.length-1;i++) {
+					var index = histogramChart.store.findBy(function(record, id) {if (record.data.value < (Math.log(ranges[i])/Math.LN10)) return false; else return true;});
+					values.push(index);
+				}
+			}
+			else {
+				for (i=1;i<ranges.length-1;i++) {
+					var index = histogramChart.store.findBy(function(record, id) {if (record.data.value < ranges[i]) return false; else return true;});
+					values.push(index);
+				}
+			}
   			var wide = Math.floor(histogramChart.axes.items[0].width);
   			classBreakSlider.destroy();
 				classBreakSlider = Ext.create('Ext.slider.Multi', {
