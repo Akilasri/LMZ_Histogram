@@ -39,7 +39,7 @@ var highlightStyle = new OpenLayers.Style({
   			position: 'left',
   			fields: ['value'],
   			minimum: 0,
-  			maximum: 100
+  			maximum: 100,
   			label: {
   				renderer: function(v){
 				if (logCheckBox.checked==true){return '10^'+(Math.round(v*100)/100);
