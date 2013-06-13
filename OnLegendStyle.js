@@ -465,7 +465,7 @@ function updateHistogram() {
   					return histogramChart.store.getAt(thumb.value).data.value;
   					}
   			});
-  		stylePanel.add(classBreakSlider);
+  		stylePanel.add(classBreakSlider, savebutton, loadbutton);
   	}
 
 
@@ -506,6 +506,7 @@ function updateHistogram() {
   		farbComboBox,
   		logCheckBox,
   		histogramChart,
+  		classBreakSlider,
   		savebutton,
    		loadbutton
   		
