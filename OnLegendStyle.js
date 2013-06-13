@@ -40,9 +40,6 @@ var highlightStyle = new OpenLayers.Style({
   			fields: ['value'],
   			minimum: 0,
   			maximum: 100
-  			},
-  			{
-  			type: 'Category',
   			label: {
   				renderer: function(v){
 				if (logCheckBox.checked==true){return '10^'+(Math.round(v*100)/100);
@@ -51,6 +48,13 @@ var highlightStyle = new OpenLayers.Style({
 				}
 			}
   			},
+  			{
+  			type: 'Category',
+  			label: {
+				renderer: function(v){
+					return '';
+				}
+			},
   			position: 'bottom',
   			fields: ['state']
   			}
