@@ -132,7 +132,7 @@ function updateHistogram() {
 				}
 				console.log(name+" "+value);
 				if (logCheckBox.checked==true){
-					if (value > 0) {value=(Math.log(value)Math.LN10)};
+					if (value > 0) {value=(Math.log(value)/Math.LN10)};
 					if (value != -9999 & value < 0) {value=-(Math.log(Math.abs(value)))/Math.LN10};
 					if (min > value & value != -9999) {min = Math.round(value)*100/100};
 					if (max < value) {max = (Math.round(value)*100/100)};
