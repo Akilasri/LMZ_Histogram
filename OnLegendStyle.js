@@ -408,9 +408,14 @@ function updateHistogram() {
 
   	function setSliderBreaks() {
   			var values = [];
+  			for (i=0;i<ranges.length;i++) 
+  				{
+				if (ranges[i]>=100) ranges[i]=Math.floor(ranges[i]);
+				console.log(ranges[i]);
+				}
+			applyThematicStyle(ranges);
   			if (logCheckBox.checked==true){
 				for (i=1;i<ranges.length-1;i++) {
-					if (ranges[i]>=10000) ranges[i]=Math.floor(ranges[i]);
 					var index = histogramChart.store.findBy(function(record, id) {if (record.data.value < (Math.log(ranges[i])/Math.LN10)) return false; else return true;});
 					values.push(index);
 				}
