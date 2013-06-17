@@ -75,6 +75,17 @@ var highlightStyle = new OpenLayers.Style({
   			}},
   			xField: 'state',
   			yField: 'value',
+  			renderer : function (sprite, record, attributes, index, store){
+						for (i=0; i< ranges.length; i++){
+
+							if (record.data.value >= ranges[i] && record.data.value < ranges[i+1] ){
+							sprite.setAttributes({fill:vectorLegend.rules[i].symbolizer.fillColor, stroke:vectorLegend.rules[i].symbolizer.fillColor}, true);
+							break;
+							}
+							
+						}
+						return attributes;
+				},
   			listeners: {
   				'itemclick': function(item) {
   					console.log(item);
@@ -342,7 +353,7 @@ function updateHistogram() {
             editable: false,
             fieldLabel: 'Farbe',
             labelWidth: 45,
-            store: ['rot', 'grün', 'blau', 'lila','orange'],
+            store: ['rot', 'grün', 'blau', 'lila','orange','custom...'],
             queryMode: 'local',
             value: 'rot',
             triggerAction: 'all',
@@ -467,7 +478,6 @@ function updateHistogram() {
   					
   				},
   				tipText: function(thumb){
-  					//console.log(histogramChart.store.getAt(thumb.value).data.value);
   					return histogramChart.store.getAt(thumb.value).data.value;
   					}
   			});
@@ -505,10 +515,6 @@ function updateHistogram() {
   			text: 'Anzahl der Klassen'
   		},
   		clComboBox,
-  		{
-  			xtype: 'label',
-  			text: 'Farbe'
-  		},
   		farbComboBox,
   		logCheckBox,
   		histogramChart,
@@ -525,6 +531,7 @@ function onLegendStyle(btn, evt) {
   // Brings up a configuration - window to style the legend of a vector layer
   if (!legendStyleWindow) {
   	legendStyleWindow = Ext.create('Ext.window.Window', {
+  		id: 'histWnd',
   		title: 'Histogram',
   		height: 560,
   		width: 410,
