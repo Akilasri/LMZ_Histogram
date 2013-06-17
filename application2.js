@@ -282,7 +282,7 @@ Ext.application({
   		handler: onLegendStyle,
         iconCls : 'histo',
         tooltip : 'Histogram',
-        scale :'medium'
+        scale :'large'
   		});
   	toolbarItems.push(legendButton);
   	
@@ -373,11 +373,13 @@ Ext.application({
 //VECTOR LEGEND
 		vectorLegend = Ext.create('GeoExt.container.VectorLegend', {
             untitledPrefix: 'keine Daten',
-            legendTitle: 'Kein Thema',   
+            legendTitle: 'Kein Thema', 
+            clickableTitle: true,
+	    clickableSymbol: true,
             layer: staaten,
 			clickableTitle: true,
 			listeners: {
-					'ruleclick': function(comp, rule, evt) {
+					'titleclick': function(comp, rule, evt) {
 						console.log(rule);
 						var labeltext1=rule.name.split("-")[0];
 						var labeltext2=rule.name.split("-")[1];
@@ -461,7 +463,25 @@ Ext.application({
 						}).show();
 					},
 					'symbolclick': function(comp, rule,evt){
-						console.log(rule);
+						console.log('symbol clicked');
+						var cpick = Ext.create('Ext.picker.Color', {
+							value: '993300',  // initial selected color
+							renderTo: Ext.getBody(),
+							listeners: {
+								select: function(picker, selColor) {
+								alert(selColor);
+								}
+							}
+						});
+						
+						var cPanel = Ext.create("Ext.panel.Panel",{
+							width: 150,
+							height: 100,
+							renderTo: Ext.get('menuPanel-body'),
+							items: [cpick]					
+						
+						}).show();
+						
 					},
 					//'ruleselected': function(comp, rule,evt){
 					//	'rule.enableDD':true; 
@@ -509,6 +529,7 @@ Ext.application({
 
 
         var menuPanel = Ext.create('Ext.Panel', {
+            id :'menuPanel',
             title: "",
             region: 'west',
             defaults: {
