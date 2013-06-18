@@ -581,7 +581,7 @@ function updateHistogram() {
   					return histogramChart.store.getAt(thumb.value).data.value;
   					}
   			});
-  		stylePanel.add(classBreakSlider, savebutton, loadbutton);
+  		stylePanel.add(classBreakSlider);
   	}
 
 
