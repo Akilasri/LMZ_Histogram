@@ -359,7 +359,10 @@ function updateHistogram() {
             triggerAction: 'all',
             listeners: {
                 select: function() {
-                    applyThematicStyle()
+                	if (this.value == 'custom...')
+			{openColorPicker();}
+			else	
+                    	applyThematicStyle()
                 }
             }
         });
