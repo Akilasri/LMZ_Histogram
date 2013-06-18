@@ -379,24 +379,124 @@ function updateHistogram() {
 	});
 
   	//Save_Button
-   	var savebutton = Ext.create('Ext.Button', {
-  			 text: 'Profil speichern',
-    			 renderTo: Ext.getBody(),
-    			 handler: function() {
-        			alert('Speichert noch nicht!');
-				console.log ('stylePanel');
-			}
-		});
+	var savebutton = Ext.create('Ext.Button', {
+   		text: 'Einstellungen speichern',
+    		renderTo: Ext.getBody(),
+   		handler: function() {
+   			
+        //Settings Objekt wird aufgebaut
 
-	//Load_Button
-  	 var loadbutton = Ext.create('Ext.Button', {
-   				text: 'Profil laden',
-    				renderTo: Ext.getBody(),
-   				handler: function() {
-        			alert('Lädt noch nicht!');
-				}
-			});
-  	
+			settingshistogram = {
+			indicator: indComboBox.getValue(),
+			year: yearComboBox.getValue(),
+			calssification: clComboBox.getValue(),
+			colour: farbComboBox.getValue(),
+			log: logCheckBox.getValue(),
+			classbreaks: ranges
+			};
+		console.log (JSON.stringify (settingshistogram));
+		}});
+
+// SaveHandler zum Speichern der Einstellungen
+	var saveHandler = function() {
+
+		settingsHistogram = {
+			indicator: indComboBox.getValue(),
+			year: yearComboBox.getValue(),
+			classification: clComboBox.getValue(),
+			color: farbComboBox.getValue(),
+			log: logCheckBox.getValue(),
+			classbreaks: ranges
+
+		};
+
+		settingsData = JSON.stringify(settingsHistogram);
+		document.location.href = "php/file-save.php?data="+settingsData;
+	}
+
+
+// LoadHandler zum Speichern der Einstellungen
+
+	var formPanel = Ext.create('Ext.form.Panel', {
+	    title: '',
+	    width: 420,
+	    style: 'border: 1px solid #666',
+	    frame: true,
+	    bodyPadding: '10 10 0',
+	    defaults: {
+	        anchor: '100%',
+	        allowBlank: false,
+	        msgTarget: 'side',
+	        labelWidth: 50
+	    },
+	    items: [{
+	        xtype: 'filefield',
+	        name: 'project-path',
+	        emptyText: 'Einstellungsdatei auswählen ...',
+	        fieldLabel: 'Datei',
+	        buttonText: '',
+	        //buttonOnly: true,
+	        buttonConfig: {
+	            iconCls: 'icon-load-folder'
+	        },
+	        addListeners: {
+	            'change': function () {
+	                Ext.getCmp('uploadWindow').close();
+	                var form = this.up('form').getForm();
+	                if (form.isValid()) {
+	                    form.submit({
+	                        url: 'php/file-load.php',
+	                        waitMsg: 'Einstellungsdatei wird hochgeladen...',
+	                        success: function (form, action) {
+	                            Ext.Msg.alert('Success', action.result);
+	                        },
+	                        failure: function (response, opts) {
+	                            console.log('Kommunikationsfehler mit dem Server:\n' + opts.result.file);
+	                        }
+	                    });
+	                }
+	            }
+	        }
+	    }],
+
+	buttons: [{
+	        text: 'Laden',
+	        handler: function () {
+	            Ext.getCmp('uploadWindow').close();
+	            var form = this.up('form').getForm();
+	            if (form.isValid()) {
+	                form.submit({
+	                    url: 'php/file-load.php',
+	                    waitMsg: 'Einstellungsdatei wird hochgeladen...',
+	                    success: function (form, action) {
+	                        Ext.Msg.alert('Success', action.result.points);
+	                        //processPathCollection(action.result.points);
+	                    },
+	                    failure: function (form, action) {
+	                        console.log('Kommunikationsfehler mit dem Server:\n' + action.result.file);
+	                    }
+	                });
+	            }
+	        }
+	    }, {
+	        text: 'Reset',
+	        handler: function () {
+	            this.up('form').getForm().reset();
+	        }
+	    }]
+	});
+	
+	var fileWindow = Ext.createWidget('window', {
+	    id: 'uploadWindow',
+	    title: 'Einstellungen laden',
+	    autoWidth: true,
+	    autoHeight: true,
+	    renderTo: Ext.getBody(),
+	    closeAction: 'hide',
+	    items: [
+	    formPanel]
+	
+	});
   	// MultiSlider 
   	
   		
@@ -519,12 +619,29 @@ function updateHistogram() {
   		logCheckBox,
   		histogramChart,
   		classBreakSlider,
-  		savebutton,
-   		loadbutton
-  		
-  	]
-    
-  });
+  		],
+			tbar:[
+				{
+					xtype: 'button',
+					text: 'Einstellungen speichern',
+					handler: saveHandler
+				
+				},
+
+
+				{
+					xtype: 'button',
+					text: 'Einstellungen laden',
+					handler: function () {
+						fileWindow.show();
+					}
+
+				}
+
+
+			],
+ 
+  	});
 
 function onLegendStyle(btn, evt) {
   
