@@ -369,7 +369,7 @@ function updateHistogram() {
   	
   	//LogCheckBox to choose whether the graph should be shown logarithmically
   	var logCheckBox = Ext.create('Ext.form.field.Checkbox', {
-		fieldLabel: 'Logarithmic Axis',
+		fieldLabel: 'Logarithmische Achsen',
 		width: 50,
 		checked: false,
 		listeners: {
