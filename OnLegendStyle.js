@@ -369,8 +369,8 @@ function updateHistogram() {
   	
   	//LogCheckBox to choose whether the graph should be shown logarithmically
   	var logCheckBox = Ext.create('Ext.form.field.Checkbox', {
-		boxLabel: 'Log',
-		width: 50,
+		boxLabel: 'Logarithmic Chart',
+		width: 150,
 		checked: false,
 		listeners: {
 			change: function() {
