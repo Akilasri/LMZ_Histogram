@@ -524,7 +524,7 @@ function updateHistogram() {
   			var values = [];
   			for (i=0;i<ranges.length;i++) 
   				{
-				if (ranges[i]>=100) ranges[i]=Math.floor(ranges[i]);
+				if (ranges[i]>=10000) ranges[i]=Math.floor(ranges[i]);
 				console.log(ranges[i]);
 				}
 			applyThematicStyle(ranges);
