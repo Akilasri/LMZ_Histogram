@@ -516,7 +516,7 @@ Ext.application({
             title: 'Impressum',
             collapsible: true,
             collapsed: true,
-            html:'<br><h2>&nbsp;Hochschule Karlsruhe</h2><br><b>&nbsp;GIS-Projekt</b><br> &nbsp;Alice Rühl<br> &nbsp;Amr Bakri<br> &nbsp;Michael Kuch<br> &nbsp;Roman Wössner<br><br><img src="img/lmz.gif"><br><br>'
+            html:'<br><h2>&nbsp;Hochschule Karlsruhe</h2><br><b>&nbsp;GIS-Projekt</b><br> &nbsp;Akila Sriramulu<br> &nbsp;Christoph Hofmann<br> &nbsp;Gregg Hakoma<br> &nbsp;Piyush Jalan<br><br><img src="img/lmz.gif"><br><br>'
         });
         
         var hilfePanel = Ext.create('Ext.Panel', {
