@@ -149,7 +149,7 @@ function getThematicStyle(layername,newRanges) {
                     }
                 })
             var rule_x = new OpenLayers.Rule({
-                name: (Math.floor(ranges[i]*100)/100) + " - " + (Math.floor(ranges[i+1]*100)/100),
+                name: (Math.floor(ranges[i]*100)/100) + " - <" + (Math.floor(ranges[i+1]*100)/100),
                 filter: filter_x,
                 symbolizer: { fillColor: colors[i],
                             fillOpacity: 1, strokeColor: "white"}
