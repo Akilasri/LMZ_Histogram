@@ -429,19 +429,26 @@ Ext.application({
 											if (isNaN(value)){
 												value=rule.name.split("-")[1];
 												myfield.setValue(ranges[i]);
-											}
-											if (value >= Math.floor(ranges[i+1]*100)/100) {
+												}
+											else if (value >= Math.floor(ranges[i+1]*100)/100) {
 												value = ranges[i];
 												myfield.setValue(ranges[i]);
-											}
-											if (value <= Math.floor(ranges[i-1]*100)/100) {
+												}
+											else if (value <= Math.floor(ranges[i-1]*100)/100) {
 												value = ranges[i];
 												myfield.setValue(ranges[i]);
-											}
-											// Create a copy of the ranges array
-											var newRanges = ranges;
-											newRanges[i]=parseFloat(myfield.getValue());
-											applyThematicStyle(newRanges); 
+												}
+										
+											else {												
+												// Create a copy of the ranges array
+												var newRanges = ranges;
+												newRanges[i]=parseFloat(myfield.getValue());
+												applyThematicStyle(newRanges); 
+												if (Ext.getCmp("legendDialog")) {
+													Ext.getCmp("legendDialog").hide();
+													}
+												}
+										
 											}
 										}
 											
