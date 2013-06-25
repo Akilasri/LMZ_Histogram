@@ -1,4 +1,4 @@
-var theme = new Array('#FF00FF', '#FFFF00', '#00FFFF', '#0000FF', '#000000', '#FFFFFF');
+var theme = new Array('#FFC6A5', '#FF9473', '#FF6342', '#FF3118', '#FF0000', '#AD0000');
 function getThematicStyle(layername,newRanges) {
     
     var matchingLayers;
@@ -149,7 +149,7 @@ function getThematicStyle(layername,newRanges) {
                     }
                 })
             var rule_x = new OpenLayers.Rule({
-                name: (Math.floor(ranges[i]*100)/100) + " - <" + (Math.floor(ranges[i+1]*100)/100),
+                name: (Math.floor(ranges[i]*100)/100) + " - < " + (Math.floor(ranges[i+1]*100)/100),
                 filter: filter_x,
                 symbolizer: { fillColor: colors[i],
                             fillOpacity: 1, strokeColor: "white"}
@@ -162,103 +162,88 @@ function getThematicStyle(layername,newRanges) {
     return thematicStyle;
 }
 
+// include all the themes here
+var themes = {
+		"name": ["Green-Blue"," Red-Blue",'Beige-Purple','Brown-Teal','Rainbow','Red-Green'],
+		"cpool":[
+		  		['#F0F9E8','#CCEBC5','#A8DDB5','#7BCCC4','#43A2CA','#0868AC'],
+				['#B2182B','#EF8A62','#FDDBC7','#D1E5F0','#67A9CF','#2166AC'],
+				['#B35806','#F1A340','#FEE0B6','#D8DAE8','#998EC3','#542788'],
+				['#8C510A','#D8B365','#F6E8C3','#C7EAE5','#5AB4AC','#01665E'],
+				['#D53E4F','#FC8D59','#FEE08B','#E6F598','#99D594','#3288BD'],
+				['#D73027','#FC8D59','#FEE08B','#D9EF8B','#91CF60','#1A9850']
+			]
+														
+	};
+	
+//opens on choosing the custom option from the combobox
 function openColorPicker()
 {	
-		
-	var sprite1 = Ext.create('Ext.draw.Sprite', {
-					type: 'rect',
-					width: 300,
-					height: 20,
-					x: 0, y:0,
-					stroke: '#000000',
-					'stroke-width': 1,
-					listeners: {
-						'click' :  function(){ 
-								theme = new Array('#F0F9E8', '##CCEBC5', '#A8DDB5', '#7BCCC4', '#43A2CA', '#0868AC');
-								console.log('click sprite 2');
-								applyThematicStyle();
-								}
-					}
-					});	
-					
-	var sprite2 = Ext.create('Ext.draw.Sprite', {
-					type: 'rect',
-					width: 300,
-					height: 20,
-					x: 0, y:30,
-					stroke: '#000000',
-					'stroke-width': 1,
-					listeners: {
-						'click' :  function(){ console.log("clicked sprite 2");
+	var sprites = new Array ();
+	var gradients= new Array();
+	var y = 0;
+	
+	for (i=0; i< themes.cpool.length ; i++)
+	{
+		//create sprites based on the number of themes
+		sprites [i] = Ext.create('Ext.draw.Sprite', {
+				type: 'rect',
+				width: 300,
+				height: 20,
+				x: 0, y:y,
+				stroke: '#000000',
+				'stroke-width': 1,
+				'temp_theme' : themes["cpool"][i],
+				listeners: {
+				'click' : function(){
+						theme =  this.temp_theme;
+						console.log(this.temp_theme);
+						applyThematicStyle();
+						histogramChart.redraw();
 						}
-						}
-					});
-	var drawComp = Ext.create('Ext.draw.Component', {
-					renderTo: Ext.getBody(),
-					width: 300,
-					height: 400,
-					viewBox: true,
-					items: [sprite1, sprite2],
-					gradients: [{
-							'id': 'gradientId',
-							angle: 0,
-							stops: {
-								0: {
-									color: '#F0F9E8'
-								},
-								10: {
-									color: '#CCEBC5'
-								},
-								30: {
-									color: '#A8DDB5'
-								},
-								50: {
-									color: '#7BCCC4'
-								},
-								70: {
-									color: '#43A2CA'
-								},
-								100: {
-									color: '#0868AC'
-								}
-							}}, {
-							'id': 'gradientId2',
-							angle: 0,
-							stops: {
-								0: {
-									color: '#B2182B'
-								},
-								10: {
-									color: '#EF8A62'
-								},
-								30: {
-									color: '#FDDBC7'
-								},
-								50: {
-									color: '#D1E5F0'
-								},
-								70: {
-									color: '#67A9CF'
-								},
-								100: {
-									color: '#2166AC'
-								}
-							}
-						}],
-				});
-					
-	sprite1.setAttributes({ fill: 'url(#gradientId)'}, true);
-	sprite2.setAttributes({ fill: 'url(#gradientId2)'},true);			
-	var temp =Ext.create("Ext.panel.Panel",{
-							title: 'choose the theme',
-							width: 400,
-							height: 400,
-							draggable:true,
-							closable: true,
-							id : 'colorWdw',
-							renderTo: Ext.getBody(),
-							items :[drawComp]						
+				}
+			});	
+		y = y+30;
+		//create gradients based on the number of themes
+		gradients.push( {'id' : "grad"+i,	
+						'angle' : 0,
+						'stops': {
+							0:{color:''},
+							20:{color:''},
+							40:{color:''},
+							60:{color:''},
+							80:{color:''},
+							100:{color:''}}
 						});
+		//assign color stops to the gradient from the theme
+		for (var j=0;j<=100;j=j+20) {
+			gradients[i].stops[j].color = themes.cpool[i][j/20];
+			}
+	
+	}
+
+	// add the sprites to the drawing surface
+	var drawComp = Ext.create('Ext.draw.Component', {
+		renderTo: Ext.getBody(),
+		width: 300,
+		height: 400,
+		items: sprites,
+		gradients:  gradients
+		});
+	// set the gradients to each sprite
+	for (i=0; i<sprites.length;i++)
+		{sprites[i].setAttributes({ fill: 'url(#grad'+i+')'}, true);}			
+		
+	var temp = Ext.create("Ext.panel.Panel",{
+			title: 'choose the theme',
+			width: 400,
+			height: 400,
+			draggable:true,
+			closable: true,
+			id : 'colorWdw',
+			renderTo: Ext.getBody(),
+			items :[drawComp]						
+		});
 				
 	temp.show();					
 }
