@@ -109,7 +109,7 @@ var highlightStyle = new OpenLayers.Style({
 					}
 				},
 			renderer : function (sprite, record, attributes, index, store){
-				for (i=1; i< ranges.length; i++){
+				for (i=0; i< ranges.length; i++){
 					
 					if (record.data.value != ranges[i]){
 					sprite.setAttributes({opacity:0}, true);
