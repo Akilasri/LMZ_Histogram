@@ -470,26 +470,13 @@ Ext.application({
 						}).show();
 					},
 					'symbolclick': function(comp, rule,evt){
-						console.log('symbol clicked');
-						var cpick = Ext.create('Ext.picker.Color', {
-							value: '993300',  // initial selected color
-							renderTo: Ext.getBody(),
-							listeners: {
-								select: function(picker, selColor) {
-								alert(selColor);
-								}
-							}
-						});
-						
-						var cPanel = Ext.create("Ext.panel.Panel",{
-							width: 150,
-							height: 100,
-							renderTo: Ext.get('menuPanel-body'),
-							items: [cpick]					
-						
-						}).show();
-						
-					},
+						//set the selected color from color picker to the main theme of the map and refresh
+							theme[this.rules.lastIndexOf(rule)-1]='#'+cpick.getValue();
+							farbComboBox.setValue('custom...');
+							//console.log('symbol clicked'+cpick.getValue() +"index ="+this.rules.lastIndexOf(rule));
+							applyThematicStyle();
+							histogramChart.redraw();
+						},
 					//'ruleselected': function(comp, rule,evt){
 					//	'rule.enableDD':true; 
 					//},
@@ -503,7 +490,19 @@ Ext.application({
         });
 		
 		
-		
+// add a permanent color picker under the legend panel
+var cpick = Ext.create('Ext.picker.Color', {
+		id:'cpick',
+		value: '993300', // initial selected color
+		renderTo: Ext.getBody(),
+		hideMode:'visibility',
+		hidden:false,
+		listeners: {
+			select: function(picker, selColor) {
+			//alert(this.getValue());
+			}
+		}
+	});
 		
 		
   	        // LegendPanel
@@ -548,7 +547,7 @@ Ext.application({
             split: true,
             width: 200,
             autoScroll: true,
-            items: [hilfePanel,impressumPanel,legendPanel]
+            items: [hilfePanel,impressumPanel,legendPanel,cpick]
         });
 
         // Viewport
