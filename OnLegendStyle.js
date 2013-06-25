@@ -362,7 +362,8 @@ function updateHistogram() {
                 	if (this.value == 'custom...')
 			{openColorPicker();}
 			else	
-                    	applyThematicStyle()
+                    	{applyThematicStyle();
+                    	 histogramChart.redraw();}
                 }
             }
         });
