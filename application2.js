@@ -381,8 +381,8 @@ Ext.application({
 			listeners: {
 					'titleclick': function(comp, rule, evt) {
 						console.log(rule);
-						var labeltext1=rule.name.split("-")[0];
-						var labeltext2=rule.name.split("-")[1];
+						var labeltext1=rule.name.split("- <")[0];
+						var labeltext2=rule.name.split("- <")[1];
 						var ruleaddPanel=Ext.create('Ext.panel.Panel', {
 						width : 100, 
 						height : 70,
@@ -427,7 +427,7 @@ Ext.application({
 											// Validate the input value against the next class-break
 											var value = parseFloat(myfield.getValue());
 											if (isNaN(value)){
-												value=rule.name.split("-")[1];
+												value=rule.name.split("- <")[1];
 												myfield.setValue(ranges[i]);
 												}
 											else if (value >= Math.floor(ranges[i+1]*100)/100) {
