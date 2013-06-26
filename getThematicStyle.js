@@ -235,7 +235,7 @@ function openColorPicker()
 		{sprites[i].setAttributes({ fill: 'url(#grad'+i+')'}, true);}			
 		
 	var temp = Ext.create("Ext.panel.Panel",{
-			title: 'choose the theme',
+			title: 'Farbe Themen Auswählen',
 			width: 400,
 			height: 400,
 			draggable:true,
