@@ -464,6 +464,7 @@ Ext.application({
 						var dumbWindow = Ext.create("Ext.window.Window",{
 							width: 120,
 							height: 100,
+							id: 'legendDialog',
 							renderTo: Ext.getBody(),
 							items: [ruleaddPanel]					
 						
